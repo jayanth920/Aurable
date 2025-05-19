@@ -16,37 +16,56 @@ import { UserDetailContext } from "@/context/UserDetailContext";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import uuid4 from "uuid4";
+import { SignInDialogContext } from "@/context/SignInDialogContext";
 
-function SignInDialog({ openDialog, closeDialog }) {
+function SignInDialog() {
+  const {openDialog, setOpenDialog} = useContext(SignInDialogContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const CreateUser = useMutation(api.users.CreateUser);
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
-      const userInfo = await axios.get(
-        "https://www.googleapis.com/oauth2/v3/userinfo",
-        { headers: { Authorization: "Bearer " + tokenResponse?.access_token } }
-      );
+      try {
+        // Get Google user info
+        const userInfo = await axios.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          { headers: { Authorization: "Bearer " + tokenResponse?.access_token } }
+        );
+  
+        const googleUser = userInfo.data;
+  
+        // Create user in Convex and get inserted _id
+        const convexUserId = await CreateUser({
+          name: googleUser?.name,
+          email: googleUser?.email,
+          picture: googleUser?.picture,
+          uid: uuid4(), // optional if you're also using `email` for uniqueness
+        });
+  
+        // Merge Google user data with Convex _id
+        const fullUser = {
+          ...googleUser,
+          _id: convexUserId,
+        };
+  
+        // Save to localStorage and context
+        localStorage.setItem("user", JSON.stringify(fullUser));
+        setUserDetail(fullUser);
 
-      console.log(userInfo);
-      const user = userInfo.data;
-      await CreateUser({
-        name: user?.name,
-        email: user?.email,
-        picture: user?.picture,
-        uid: uuid4(),
-      });
-      if (typeof window !== undefined) {
-        localStorage.setItem("user", JSON.stringify(user));
+        console.log(fullUser);
+  
+        // Close the sign-in dialog
+        setOpenDialog(false);
+      } catch (err) {
+        console.error("Google login error:", err);
       }
-      setUserDetail(userInfo?.data);
-      closeDialog(false);
     },
-    onError: (errorResponse) => console.log(errorResponse),
+    onError: (errorResponse) => console.error("OAuth error:", errorResponse),
   });
+
+  
   return (
-    <Dialog open={openDialog} onOpenChange={closeDialog}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle></DialogTitle>
