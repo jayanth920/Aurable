@@ -1,11 +1,13 @@
 'use client';
 import { HelpCircle, LogOut, Settings, Wallet } from 'lucide-react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
+import { UserDetailContext } from '@/context/UserDetailContext';
 
 function SideBarFooter() {
   const router = useRouter();
+  const {userDetail, setUserDetail} = useContext(UserDetailContext)
   const options = [
     {
       name: 'Settings',
@@ -28,9 +30,14 @@ function SideBarFooter() {
   const onOptionClock = (option) => {
     if (option.path) {
       router.push(option.path);
+    }else if(option.name === 'Sign Out'){
+      console.log(`${option.name}: Sign Out`);
+      localStorage.removeItem('user');
+      router.push('/');
+      setUserDetail({})
+      window.location.reload();
     } else {
       console.log(`${option.name} clicked (no path)`);
-      // You can handle other logic here (e.g. open a modal or logout)
     }
   };
   
