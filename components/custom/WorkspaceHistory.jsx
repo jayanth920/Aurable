@@ -7,20 +7,23 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useSidebar } from '../ui/sidebar';
 
 function WorkspaceHistory() {
+  const convex = useConvex();
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const [workspaceList, setWorkSpaceList] = useState();
-  const convex = useConvex();
   const { toggleSidebar } = useSidebar();
+
   useEffect(() => {
     userDetail && GetAllWorkspace();
   }, [userDetail]);
 
   const GetAllWorkspace = async () => {
+    if (!userDetail?._id) return;
     const result = await convex.query(api.workspace.GetAllWorkspace, {
-      userId: userDetail?._id,
+      userId: userDetail._id,
     });
     setWorkSpaceList(result);
   };
+  
 
   return (
     <div>
