@@ -12,11 +12,13 @@ import AppSideBar from '@/components/custom/AppSideBar';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { ActionContext } from '@/context/ActionContext';
 import { useRouter } from 'next/navigation';
+import { SignInDialogContext } from '@/context/SignInDialogContext';
 
 function Provider({ children }) {
   const [messages, setMessages] = useState();
   const [userDetail, setUserDetail] = useState();
   const [action, setAction] = useState();
+  const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const convex = useConvex();
 
@@ -47,6 +49,7 @@ function Provider({ children }) {
         <PayPalScriptProvider
           options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_Id }}
         >
+          <SignInDialogContext.Provider value={{ openDialog, setOpenDialog }}>
           <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
             <MessagesContext.Provider value={{ messages, setMessages }}>
               <ActionContext.Provider value={{action, setAction}}>
@@ -67,6 +70,7 @@ function Provider({ children }) {
               </ActionContext.Provider>
             </MessagesContext.Provider>
           </UserDetailContext.Provider>
+          </SignInDialogContext.Provider>
         </PayPalScriptProvider>
       </GoogleOAuthProvider>
     </div>
