@@ -9,9 +9,11 @@ import { Download, Rocket } from 'lucide-react';
 import { useSidebar } from '../ui/sidebar';
 import { usePathname } from 'next/navigation';
 import { ActionContext } from '@/context/ActionContext';
+import { SignInDialogContext } from '@/context/SignInDialogContext';
 
 function Header() {
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const {openDialog, setOpenDialog} = useContext(SignInDialogContext);
   const { action, setAction } = useContext(ActionContext);
   const { toggleSidebar } = useSidebar();
   const pathname = usePathname();
@@ -29,14 +31,14 @@ function Header() {
       {/* </Link> */}
       {!userDetail?.name ? (
         <div className="flex gap-5">
-          <Button variant="ghost">Sign In</Button>
           <Button
             className="text-white"
             style={{
               backgroundColor: Colors.BLUE,
             }}
+            onClick={() => setOpenDialog(true)}
           >
-            Get Started
+            Sign In
           </Button>
         </div>
       ) : (
