@@ -9,24 +9,31 @@ export const CreateUser = mutation({
     uid: v.string(),
   },
   handler: async (ctx, args) => {
-    // If user already exists
-    const user = await ctx.db
+    // 1. Check if user already exists
+    const existingUser = await ctx.db
       .query('users')
       .filter((q) => q.eq(q.field('email'), args.email))
       .collect();
-    console.log(user);
 
-    // If not, then add new user
-    const result = await ctx.db.insert('users', {
+    if (existingUser.length > 0) {
+      // 2. Return existing user's _id
+      console.log("EXISTING USER", existingUser[0]._id);
+      return existingUser[0]._id;
+    }
+
+    // 3. Otherwise, insert new user
+    const newUserId = await ctx.db.insert('users', {
       name: args.name,
       picture: args.picture,
       email: args.email,
       uid: args.uid,
       token: 50000,
     });
-    console.log(result);
+
+    return newUserId;
   },
 });
+
 
 export const GetUser = query({
   args: {
