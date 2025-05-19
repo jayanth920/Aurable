@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import { MessagesContext } from "@/context/MessagesContext";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import Colors from "@/data/Colors";
@@ -10,15 +11,16 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { TextShimmer } from "../ui/text-shimmer";
+import { TextShimmerWave } from "../ui/text-shimmer-wave";
 import { GradientButton } from "../ui/gradient-button";
 import { cn } from "@/lib/utils";
+import { SignInDialogContext } from "@/context/SignInDialogContext";
 
 function Hero() {
   const [userInput, setUserInput] = useState();
   const { messages, setMessages } = useContext(MessagesContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
-  const [openDialog, setOpenDialog] = useState(false);
+  const {openDialog, setOpenDialog} = useContext(SignInDialogContext);
   const CreateWorkspace = useMutation(api.workspace.CreateWorkspace);
   const router = useRouter();
 
@@ -45,10 +47,26 @@ function Hero() {
     router.push("/workspace/" + workspaceId);
   };
 
+  const shimmerContent = useMemo(
+    () => (
+      <TextShimmerWave
+        className="[--base-color:white] [--base-gradient-color:black]"
+        duration={1.5}
+        spread={0.5}
+        zDistance={1}
+        scaleDistance={1.1}
+        rotateYDistance={20}
+      >
+        {Lookup.HERO_DESC}
+      </TextShimmerWave>
+    ),
+    []
+  );
+
   return (
-    <div className="flex flex-col items-center mt-60 xl:mt-42 gap-2">
+    <div className="flex flex-col items-center mt-32 gap-2">
       <h2
-        className="subpixel-antialiased font-bold text-4xl"
+        className="subpixel-antialiased font-bold text-4xl text-white"
         style={{
           fontFamily: "Gloock",
           textShadow: "0 2px 2px rgba(0, 0, 0, 0.8)",
@@ -56,16 +74,7 @@ function Hero() {
       >
         {Lookup.HERO_HEADING}
       </h2>{" "}
-      <TextShimmer
-        duration={4}
-        className="text-lg font-medium 
-        [--base-color:white] 
-        [--base-gradient-color:black] 
-        dark:[--base-color:white] 
-        dark:[--base-gradient-color:#222]"
-      >
-        {Lookup.HERO_DESC}
-      </TextShimmer>
+      {shimmerContent}
       <div
         className="p-5 rounded-xl max-w-2xl w-full mt-3 border-muted-border h-[20vh]"
         style={{ backgroundColor: "rgba(39, 39, 37, 0.5)" }}
@@ -73,7 +82,7 @@ function Hero() {
         <div className="flex gap-2">
           <textarea
             placeholder="I want to build a..."
-            className="outline-none bg-transparent w-full h-32 max-h-56 resize-none"
+            className="outline-none bg-transparent w-full h-32 max-h-56 resize-none text-white"
             style={{ fontFamily: "monospace" }}
             onChange={(event) => setUserInput(event.target.value)}
           />
@@ -118,10 +127,7 @@ function Hero() {
           </h2>
         ))}
       </div>
-      <SignInDialog
-        openDialog={openDialog}
-        closeDialog={(v) => setOpenDialog(v)}
-      />
+      <SignInDialog/>
     </div>
   );
 }
