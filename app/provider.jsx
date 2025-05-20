@@ -16,7 +16,7 @@ import { SignInDialogContext } from '@/context/SignInDialogContext';
 
 function Provider({ children }) {
   const [messages, setMessages] = useState();
-  const [userDetail, setUserDetail] = useState();
+  const [userDetail, setUserDetail] = useState(null);
   const [action, setAction] = useState();
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
