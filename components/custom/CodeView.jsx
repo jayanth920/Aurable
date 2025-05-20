@@ -49,6 +49,7 @@ function CodeView() {
     const result = await convex.query(api.workspace.GetWorkspace, {
       workspaceId: id,
     });
+
     const mergedFils = { ...Lookup.DEFAULT_FILE, ...result?.fileData };
     setFiles(mergedFils);
     setLoading(false);
@@ -73,23 +74,32 @@ function CodeView() {
     // return;
     setLoading(true);
     const PROMPT = JSON.stringify(messages) + ' ' + Prompt.CODE_GEN_PROMPT;
+
     console.log({ PROMPT });
+
     const result = await axios.post('/api/gen-ai-code', {
       prompt: PROMPT,
     });
 
     console.log(result?.data);
+
     const aiResp = result.data;
     const mergedFiles = { ...Lookup.DEFAULT_FILE, ...aiResp?.files };
     setFiles(mergedFiles);
+
     await UpdateFiles({
       workspaceId: id,
       files: aiResp?.files,
     });
     setLoading(false);
-    const token =
-      Number(userDetail?.token) - Number(countToken(JSON.stringify(aiResp)));
+
+    const respToken = countToken(JSON.stringify(aiResp))
+    console.log("RESPONSE TOKENS", respToken);
+    const token = Number(userDetail?.token) - Number(respToken);
+    console.log("TOTALTOKENS REMAINING", token);
+
     setUserDetail((prev) => ({ ...prev, token: token }));
+
     await UpdateToken({
       token: token,
       userId: userDetail?._id,
