@@ -1,6 +1,6 @@
 'use client';
 import ChatView from '@/components/custom/ChatView';
-import CodeView from '@/components/custom/CodeView';
+import CodeViewWrapper from '@/components/custom/CodeView';
 import React, { useContext, useEffect } from 'react';
 import { UserDetailContext } from '@/context/UserDetailContext';
 import { useRouter } from 'next/navigation';
@@ -26,7 +26,7 @@ if (userDetail === null) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         <ChatView />
         <div className="col-span-2">
-          <CodeView />
+          <CodeViewWrapper />
         </div>
       </div>
     </div>
