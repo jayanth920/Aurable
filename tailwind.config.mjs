@@ -8,15 +8,15 @@ export default {
   ],
   safelist: [
     {
-      pattern: /.*\[.*--.*\].*/, // keeps all classes with CSS vars like [--shimmer-color]
+      pattern: /--.*/, // ✅ safelist all your CSS custom properties
     },
     {
-      pattern: /.*\[.*background:.*\].*/, // e.g. [background:conic-gradient(...)]
-    },
-    {
-      pattern: /.*\[.*inset:.*\].*/, // e.g. [inset:var(--cut)]
+      pattern: /[a-z]+-\[.*\]/, // ✅ safelist arbitrary property syntax e.g. [background:var(--bg)]
     },
   ],
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
   theme: {
     extend: {
       colors: {
