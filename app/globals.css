@@ -45,7 +45,6 @@ body::before {
   pointer-events: none; 
 }
 
-
 @layer base {
   :root {
     --sidebar-background: 0 0% 98%;
@@ -68,8 +67,11 @@ body::before {
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  .theme {
+    --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+    --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  }
 }
-
 
 @layer base {
   :root {
@@ -145,6 +147,26 @@ body::before {
 }
 
 @layer base {
+  :root {
+    --color-1: 330 100% 40%; /* Dark Neon Pink */
+    --color-2: 140 100% 55%; /* Bright Electric Green */
+    --color-3: 210 100% 30%; /* Deep Neon Blue */
+    --color-4: 60 100% 70%; /* Light Neon Yellow */
+    --color-5: 295 100% 45%; /* Dark Neon Purple */
+    --brand: 50 100% 50%; /* Bright, punchy yellow */
+  }
+
+  .dark {
+    --color-1: 330 100% 40%; /* Dark Neon Pink */
+    --color-2: 140 100% 55%; /* Bright Electric Green */
+    --color-3: 210 100% 30%; /* Deep Neon Blue */
+    --color-4: 60 100% 70%; /* Light Neon Yellow */
+    --color-5: 295 100% 45%; /* Dark Neon Purple */
+    --brand: 50 100% 50%; /* Bright, punchy yellow */
+  }
+}
+
+@layer base {
   * {
     @apply border-border;
   }
@@ -152,7 +174,6 @@ body::before {
     @apply bg-background text-foreground;
   }
 }
-
 
 @layer base {
   @property --pos-x {
@@ -372,4 +393,26 @@ body::before {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(45deg, #909090, #b0b0b0);
+}
+
+@theme inline {
+  @keyframes spin-around {
+  0% {
+    transform: translateZ(0) rotate(0);
+    }
+  15%, 35% {
+    transform: translateZ(0) rotate(90deg);
+    }
+  65%, 85% {
+    transform: translateZ(0) rotate(270deg);
+    }
+  100% {
+    transform: translateZ(0) rotate(360deg);
+    }
+  }
+  @keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
 }
