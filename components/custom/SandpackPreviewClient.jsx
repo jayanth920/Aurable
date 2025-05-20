@@ -4,7 +4,7 @@ import { SandpackPreview, useSandpack } from '@codesandbox/sandpack-react';
 import React, { useContext, useEffect, useState } from 'react';
 
 function SandpackPreviewClient() {
-  const { sandpack } = useSandpack();
+  const { sandpack  } = useSandpack();
   const { action } = useContext(ActionContext);
   const [hasOpened, setHasOpened] = useState(false);
 
@@ -29,7 +29,7 @@ function SandpackPreviewClient() {
     }, 300);
 
     return () => clearInterval(interval);
-  }, [sandpack.clients, sandpack.activeFile, action, hasOpened]);
+  }, [sandpack.clients, sandpack.activeFile, action, hasOpened, sandpack.autoReload]);
 
   return (
     <SandpackPreview
