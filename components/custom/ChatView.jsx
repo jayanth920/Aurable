@@ -1,25 +1,25 @@
-'use client';
-import { MessagesContext } from '@/context/MessagesContext';
-import { UserDetailContext } from '@/context/UserDetailContext';
-import { api } from '@/convex/_generated/api';
-import Colors from '@/data/Colors';
-import Lookup from '@/data/Lookup';
-import Prompt from '@/data/Prompt';
-import axios from 'axios';
-import { useConvex, useMutation } from 'convex/react';
-import { ArrowRight, Link, Loader2Icon } from 'lucide-react';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import React, { useContext, useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { useSidebar } from '../ui/sidebar';
-import { toast } from 'sonner';
+"use client";
+import { MessagesContext } from "@/context/MessagesContext";
+import { UserDetailContext } from "@/context/UserDetailContext";
+import { api } from "@/convex/_generated/api";
+import Colors from "@/data/Colors";
+import Lookup from "@/data/Lookup";
+import Prompt from "@/data/Prompt";
+import axios from "axios";
+import { useConvex, useMutation } from "convex/react";
+import { ArrowRight, Link, Loader2Icon } from "lucide-react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import { useSidebar } from "../ui/sidebar";
+import { toast } from "sonner";
+import { encode } from "gpt-tokenizer";
 
 export const countToken = (inputText) => {
-  return inputText
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word).length;
+  const tokens = encode(inputText || "");
+  console.log(tokens, tokens.length);
+  return tokens.length;
 };
 
 function ChatView() {
@@ -32,6 +32,7 @@ function ChatView() {
   const UpdateMessages = useMutation(api.workspace.UpdateMessages);
   const { toggleSidebar } = useSidebar();
   const UpdateToken = useMutation(api.users.UpdateToken);
+  const userInputRef = useRef("");
 
   useEffect(() => {
     id && GetWorkspaceData();
@@ -46,10 +47,11 @@ function ChatView() {
     });
     setMessages(result?.messages);
   };
+  
   useEffect(() => {
     if (messages?.length > 0) {
       const role = messages[messages?.length - 1].role;
-      if (role == 'user') {
+      if (role == "user") {
         GetAiResponse();
       }
     }
@@ -58,70 +60,85 @@ function ChatView() {
   const GetAiResponse = async () => {
     // return;
     setLoading(true);
+    const inputTokenCount = countToken(userInputRef.current || '');
+
+    console.log("INPUT TOKENS USED", inputTokenCount);
+
     const PROMPT = JSON.stringify(messages) + Prompt.CHAT_PROMPT;
+
     console.log({ PROMPT });
-    const result = await axios.post('/api/ai-chat', {
+
+    const result = await axios.post("/api/ai-chat", {
       prompt: PROMPT,
     });
-    console.log(result.data.result);
+
+    console.log("AI RESPONSE", result.data.result);
+
     const aiResp = {
-      role: 'ai',
+      role: "ai",
       content: result.data.result,
     };
+
+    const outputTokenCount = countToken(result.data.result);
+    console.log("OUTPUT TOKENS USED", outputTokenCount);
+
+    const totalTokenUsed = inputTokenCount + outputTokenCount;
+    console.log("TOTAL TOKENS USED IN GENERAL RESPONSE", totalTokenUsed);
+
     setMessages((prev) => [...prev, aiResp]);
-    
-    // update token to database
 
     await UpdateMessages({
       messages: [...messages, aiResp],
       workspaceId: id,
     });
-    console.log("LEN", countToken(JSON.stringify(aiResp)));
-    const token = Number(userDetail?.token) - Number(countToken(JSON.stringify(aiResp)));
-    setUserDetail(prev=>( {...prev, token: token}))
+
+    const updatedToken = Number(userDetail?.token) - totalTokenUsed;
+    setUserDetail((prev) => ({ ...prev, token: updatedToken }));
+
     await UpdateToken({
-      token: token,
-      userId: userDetail?._id
-    })
+      token: updatedToken,
+      userId: userDetail?._id,
+    });
 
     setLoading(false);
   };
 
   const onGenerate = (input) => {
-    if(userDetail?.token < 10) {
+    if (userDetail?.token < 10) {
       toast("You don't have enough token to generate code");
-      return ;
-
+      return;
     }
-    setMessages((prev) => [...prev, { role: 'user', content: input }]);
-    setUserInput('');
+    userInputRef.current = input;
+    setMessages((prev) => [...prev, { role: "user", content: input }]);
+    setUserInput("");
   };
 
   return (
     <div className="relative h-[83vh] flex flex-col">
       <div className="flex-1 overflow-y-scroll scrollbar-hide pl-10">
-        {messages?.length > 0 && messages?.map((msg, index) => (
-          <div
-            key={index}
-            className="p-3 rounded-lg mb-2 flex gap-2 items-center justify-start leading-7"
-            style={{
-              backgroundColor: Colors.CHAT_BACKGROUND,
-            }}
-          >
-            {msg?.role == 'user' && (
-              <Image
-                src={userDetail?.picture}
-                alt="userImage"
-                width={35}
-                height={35}
-                className="rounded-full"
-              />
-            )}
-            <ReactMarkdown className="flex flex-col">
-              {msg?.content}
-            </ReactMarkdown>
-          </div>
-        ))}
+        {messages?.length > 0 &&
+          messages?.map((msg, index) => (
+            <div
+              key={index}
+              className="p-3 rounded-lg mb-2 flex gap-2 items-center justify-start leading-7"
+              style={{
+                backgroundColor: Colors.CHAT_BACKGROUND,
+              }}
+            >
+              {msg?.role == "user" && (
+                <Image
+                  src={userDetail?.picture}
+                  alt="userImage"
+                  width={35}
+                  height={35}
+                  className="rounded-full"
+                />
+              )}
+              <ReactMarkdown className="flex flex-col">
+                {msg?.content}
+              </ReactMarkdown>
+            </div>
+          ))}
         {loading && (
           <div
             className="p-3 rounded-lg mb-2 flex gap-2 items-center justify-start"
