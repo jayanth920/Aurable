@@ -1,32 +1,38 @@
 'use client';
 import { ActionContext } from '@/context/ActionContext';
 import { SandpackPreview, useSandpack } from '@codesandbox/sandpack-react';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 function SandpackPreviewClient() {
-  const previewRef = useRef();
   const { sandpack } = useSandpack();
-    const { action, setAction } = useContext(ActionContext);
-  
+  const { action } = useContext(ActionContext);
+  const [hasOpened, setHasOpened] = useState(false);
+
   useEffect(() => {
-    GetSandpackCleint();
-  }, [sandpack&& action]);
-  const GetSandpackCleint = async () => {
-    const client = previewRef.current?.getClient();
-    if (client) {
-      console.log(client);
-      const result = await client.getCodeSandboxURL();
-      if(action?.actionType == "deploy") {
-        window.open('https://' + result?.sandboxId + ".csb.app/")
-      } else if(action?.actionType == "export") {
-        window?.open(result?.editorUrl)
-      }
-    }
-  };
+    const interval = setInterval(() => {
+      const client = sandpack?.clients?.[sandpack.activeFile];
+      const status = client?.status;
+
+      if (!client || status !== 'running' || hasOpened) return;
+
+      client.getCodeSandboxURL().then((result) => {
+        if (action?.actionType === 'deploy') {
+          window.open(`https://${result.sandboxId}.csb.app/`, '_blank');
+        } else if (action?.actionType === 'export') {
+          window.open(result.editorUrl, '_blank');
+        }
+
+        setHasOpened(true); // prevent re-opening
+      });
+
+      clearInterval(interval);
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, [sandpack.clients, sandpack.activeFile, action, hasOpened]);
 
   return (
     <SandpackPreview
-      ref={previewRef}
       showNavigator={true}
       style={{ height: '80vh' }}
     />
