@@ -60,8 +60,11 @@ function SignInDialog() {
         console.error("Google login error:", err);
       }
     },
-    onError: (errorResponse) => console.error("OAuth error:", errorResponse),
-  });
+onError: (errorResponse) => {
+  // console.error("OAuth error occurred.");
+  console.dir(errorResponse, { depth: null });
+  alert("Google sign-in failed. Please try again.");
+}  });
 
   
   return (
