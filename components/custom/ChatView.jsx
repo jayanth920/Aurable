@@ -15,6 +15,7 @@ import ReactMarkdown from "react-markdown";
 import { useSidebar } from "../ui/sidebar";
 import { toast } from "sonner";
 import { encode } from "gpt-tokenizer";
+import { Loader } from "../ui/loader";
 
 export const countToken = (inputText) => {
   const tokens = encode(inputText || "");
@@ -47,7 +48,7 @@ function ChatView() {
     });
     setMessages(result?.messages);
   };
-  
+
   useEffect(() => {
     if (messages?.length > 0) {
       const role = messages[messages?.length - 1].role;
@@ -60,7 +61,7 @@ function ChatView() {
   const GetAiResponse = async () => {
     // return;
     setLoading(true);
-    const inputTokenCount = countToken(userInputRef.current || '');
+    const inputTokenCount = countToken(userInputRef.current || "");
 
     console.log("INPUT TOKENS USED", inputTokenCount);
 
@@ -115,7 +116,15 @@ function ChatView() {
 
   return (
     <div className="relative h-[83vh] flex flex-col">
-      <div className="flex-1 overflow-y-scroll scrollbar-hide pl-10">
+      <div
+        className="flex-1 overflow-y-scroll scrollbar-hide pl-10 relative"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
+        }}
+      >
         {messages?.length > 0 &&
           messages?.map((msg, index) => (
             <div
@@ -146,7 +155,7 @@ function ChatView() {
               backgroundColor: Colors.CHAT_BACKGROUND,
             }}
           >
-            <Loader2Icon className="animate-spin" />
+            <Loader variant="circular" />
             <h2>Generating response...</h2>
           </div>
         )}
