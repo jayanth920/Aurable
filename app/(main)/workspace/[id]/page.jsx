@@ -4,6 +4,8 @@ import CodeViewWrapper from '@/components/custom/CodeView';
 import React, { useContext, useEffect } from 'react';
 import { UserDetailContext } from '@/context/UserDetailContext';
 import { useRouter } from 'next/navigation';
+import { Loader } from '@/components/ui/loader';
+
 
 function Workspace() {
   const { userDetail } = useContext(UserDetailContext);
@@ -17,7 +19,11 @@ useEffect(() => {
 }, [userDetail, router]);
 
 if (userDetail === null) {
-  return <div>Loading...</div>;
+  return (
+    <div className="flex flex-col items-center justify-center h-full">
+      <Loader variant="circular" />
+    </div>
+  );
 }
 
 
