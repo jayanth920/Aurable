@@ -9,6 +9,7 @@ import {
   SandpackFileExplorer,
   useSandpack,
 } from "@codesandbox/sandpack-react";
+import { Loader } from "../ui/loader";
 
 import Lookup from "@/data/Lookup";
 import { MessagesContext } from "@/context/MessagesContext";
@@ -148,8 +149,8 @@ function CodeViewInner({ initialFiles, onFilesUpdate }) {
       </SandpackLayout>
 
       {loading && (
-        <div className="p-10 bg-gray-900 bg-opacity-80 absolute top-0 w-full h-full flex justify-center items-center">
-          <Loader2Icon className="animate-spin w-10 h-10 text-white" />
+        <div className="h-full flex justify-center items-center">
+          <Loader variant="circular" />
           <h2>Generating your files...</h2>
         </div>
       )}
@@ -181,7 +182,7 @@ export default function CodeViewWrapper() {
   };
 
   if (!files) {
-    return <div className="p-10 text-white">Loading your files...</div>;
+    return <div className="p-10 text-white"><Loader variant="circular" /></div>;
   }
 
   return (
