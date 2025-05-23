@@ -17,6 +17,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import uuid4 from "uuid4";
 import { SignInDialogContext } from "@/context/SignInDialogContext";
+import { ButtonCta } from "../ui/button-shiny";
 
 function SignInDialog() {
   const {openDialog, setOpenDialog} = useContext(SignInDialogContext);
@@ -71,23 +72,23 @@ onError: (errorResponse) => {
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle></DialogTitle>
-          <h2 className="font-bold text-2xl text-center text-white">
+          <DialogTitle>
+          <h2 className="font-bold text-2xl text-center text-white" style={{fontFamily:'KaiseiOpti'}}>
             {Lookup.SIGNIN_HEADING}
           </h2>
-          <DialogDescription>
+          </DialogTitle>
+          <DialogDescription className="text-center" style={{fontFamily:'KaiseiOpti'}}>
             {Lookup.SIGNIN_SUBHEADING} {/* Just plain text here */}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col justify-center items-center gap-3 mt-2">
-          <Button
-            className="bg-blue-500 text-white hover:bg-blue-400"
+        <div className="flex flex-col justify-center items-center gap-3 mt-1">
+          <ButtonCta
+            className="text-base"
             onClick={() => googleLogin()}
-          >
-            Signin In With Google
-          </Button>
-          <p className="text-sm text-muted-foreground text-center">
+            label="Sign in with Google"
+          />
+          <p className="text-muted-foreground text-center" style={{fontFamily:'KaiseiOpti', fontSize:'13px'}}>
             {Lookup.SIGNIn_AGREEMENT_TEXT}
           </p>
         </div>
