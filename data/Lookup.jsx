@@ -97,7 +97,7 @@ export default config;
     },
     {
       name:'Unlimted (License)',
-      tokens:'Unmited',
+      tokens:'Unlimited',
       value:999999999,
       desc:'Designed for professionals who need to use Aurable a few times per week.',
       price:49.99
