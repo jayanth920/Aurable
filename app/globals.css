@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  overflow-x: hidden;
+  /* overflow-y: hidden; */
+}
+
 @font-face {
   font-family: 'CleverBold';
   src: url('/fonts/cleverbold.otf') format('truetype');
