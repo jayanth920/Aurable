@@ -117,7 +117,7 @@ function ChatView() {
   return (
     <div className="relative h-[83vh] flex flex-col">
       <div
-        className="flex-1 overflow-y-scroll scrollbar-hide pl-10 relative"
+        className="flex-1 overflow-y-scroll scrollbar-hide pl-14 md:pl-10 relative"
         style={{
           WebkitMaskImage:
             "linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)",
