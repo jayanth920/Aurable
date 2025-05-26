@@ -12,18 +12,18 @@ function SideBarFooter() {
   const isUserLoggedIn = userDetail && Object.keys(userDetail).length > 0;
 
   const options = [
-    ...(isUserLoggedIn
-      ? [
-          {
-            name: 'Settings',
-            icon: Settings,
-          },
-        ]
-      : []),
-    {
-      name: 'Help Center',
-      icon: HelpCircle,
-    },
+    // ...(isUserLoggedIn
+    //   ? [
+    //       {
+    //         name: 'Settings',
+    //         icon: Settings,
+    //       },
+    //     ]
+    //   : []),
+    // {
+    //   name: 'Help Center',
+    //   icon: HelpCircle,
+    // },
     // Only include Pricing if user is logged in
     ...(isUserLoggedIn
       ? [
