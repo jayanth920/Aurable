@@ -113,7 +113,7 @@ function CodeViewInner({ initialFiles, onFilesUpdate }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative ml-[1.75rem]">
       <div className="bg-[#181818] w-full p-2 border">
         <div className="flex items-center flex-wrap shrink-0 bg-black p-1 w-[140px] gap-3 justify-center rounded-full">
           <h2
