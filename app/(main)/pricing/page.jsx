@@ -10,7 +10,7 @@ function Pricing() {
   return (
     <div className="mt-24 px-4 sm:px-10 md:px-20 lg:px-32 max-w-7xl mx-auto">
       <h2 className="text-4xl md:text-5xl font-extrabold text-center">Our Pricing</h2>
-      <p className="text-gray-500 text-center mt-4 max-w-2xl mx-auto">
+      <p className="text-white text-center mt-4 max-w-2xl mx-auto">
         {Lookup.PRICING_DESC}
       </p>
 
@@ -21,7 +21,7 @@ function Pricing() {
           </h2>
           <div className="text-center md:text-right mt-4 md:mt-0">
             <h3 className="text-md font-semibold text-gray-700">Need more tokens?</h3>
-            <p className="text-sm text-gray-500">Upgrade your plan below</p>
+            <p className="text-sm text-gray-500">Upgrade your pack below</p>
           </div>
         </div>
       )}
