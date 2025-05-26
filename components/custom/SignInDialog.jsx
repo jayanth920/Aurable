@@ -73,10 +73,10 @@ onError: (errorResponse) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
+          </DialogTitle>
           <h2 className="font-bold text-2xl text-center text-white" style={{fontFamily:'KaiseiOpti'}}>
             {Lookup.SIGNIN_HEADING}
           </h2>
-          </DialogTitle>
           <DialogDescription className="text-center" style={{fontFamily:'KaiseiOpti'}}>
             {Lookup.SIGNIN_SUBHEADING} {/* Just plain text here */}
           </DialogDescription>
