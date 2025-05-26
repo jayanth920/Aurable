@@ -66,7 +66,7 @@ function Hero() {
   return (
     <div className="flex flex-col items-center mt-32 gap-2">
       <h2
-        className="subpixel-antialiased font-bold text-4xl text-white"
+        className="subpixel-antialiased font-bold text-3xl md:text-4xl text-white"
         style={{
           fontFamily: "Gloock",
           textShadow: "0 2px 2px rgba(0, 0, 0, 0.8)",
@@ -76,24 +76,25 @@ function Hero() {
       </h2>{" "}
       {shimmerContent}
       <div
-        className="p-5 rounded-xl max-w-2xl w-full mt-3 border-muted-border h-[20vh]"
+        className="p-5 rounded-xl w-[80vw] md:w-full mt-3 border-muted-border h-[15vh] md:h-[20vh]"
         style={{ backgroundColor: "rgba(39, 39, 37, 0.5)" }}
       >
         <div className="flex gap-2">
           <textarea
             placeholder="I want to build a..."
-            className="outline-none bg-transparent w-full h-32 max-h-56 resize-none text-white"
+            className="outline-none bg-transparent w-full h-[10vh] md:h-[15vh] resize-none text-white"
             style={{ fontFamily: "monospace" }}
             onChange={(event) => setUserInput(event.target.value)}
+            value={userInput}
           />
           <button
             className={cn(
-              "p-2 w-10 h-10 rounded-full cursor-pointer bg-amber-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] transition-all duration-300 ease-in-out active:translate-y-[1px] active:shadow-sm",
+              "p-0 md:p-2 w-6 h-6 md:w-10 md:h-10 rounded-full cursor-pointer bg-amber-50 shadow-[0_4px_10px_rgba(0,0,0,0.25)] transition-all duration-300 ease-in-out active:translate-y-[1px] active:shadow-sm",
               userInput
                 ? "opacity-80 pointer-events-auto"
                 : "opacity-0 pointer-events-none"
             )}
-            onClick={() => onGenerate(userInput)}
+            onClick={() => setUserInput(userInput)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -111,17 +112,17 @@ function Hero() {
             </svg>
           </button>
 
-          <div>
+          {/* <div>
             <Link className="h-5 w-5" />
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="flex mt-8 flex-wrap max-w-2xl items-center justify-center gap-3">
         {Lookup.SUGGSTIONS.map((suggestion, index) => (
           <h2
-            className="p-1 px-2 border rounded-full text-sm text-gray-400 hover:text-white cursor-pointer"
+            className="p-1 px-2 border rounded-full text-sm text-orange-50 hover:text-yellow-400 cursor-pointer"
             key={index}
-            onClick={() => onGenerate(suggestion)}
+            onClick={() => setUserInput(suggestion)}
           >
             {suggestion}
           </h2>
