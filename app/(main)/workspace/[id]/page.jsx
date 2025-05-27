@@ -35,7 +35,7 @@ function Workspace() {
         >
           Run
         </button>
-        button on the bottom of the preview tab to run your code !
+        button on the bottom of the * Code * tab to run your code !
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         <ChatView />
