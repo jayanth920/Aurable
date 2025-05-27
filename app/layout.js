@@ -2,6 +2,8 @@ import { Toaster } from "sonner";
 import ConvexClientProvider from "./ConvexClientProvider";
 import "./globals.css";
 import Provider from "./provider";
+import RouteLoadingOverlay from "@/components/ui/RouteLoadingOverlay";
+
 
 export const metadata = {
   title: "Aurable",
@@ -17,6 +19,7 @@ export default function RootLayout({ children }) {
       <body>
         <ConvexClientProvider>
           <Provider>{children}</Provider>
+                      <RouteLoadingOverlay /> 
           <Toaster />
         </ConvexClientProvider>
       </body>
