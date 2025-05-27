@@ -75,7 +75,7 @@ function Header() {
         </div>
       ) : (
         <div className="flex gap-5 items-center">
-          {pathname.includes("/workspace/") && (
+          {/* {pathname.includes("/workspace/") && (
             <>
               <Button variant="ghost" onClick={() => onActionBtn("export")}>
                 <Download /> Export
@@ -90,7 +90,7 @@ function Header() {
                 <Rocket /> Deploy
               </Button>
             </>
-          )}
+          )} */}
           {userDetail && (
             <Image
               onClick={toggleSidebar}
