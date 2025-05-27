@@ -94,7 +94,7 @@ function Hero() {
                 ? "opacity-80 pointer-events-auto"
                 : "opacity-0 pointer-events-none"
             )}
-            onClick={() => setUserInput(userInput)}
+            onClick={() => onGenerate(userInput)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

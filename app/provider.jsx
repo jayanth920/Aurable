@@ -1,22 +1,23 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import Header from '@/components/custom/Header';
-import { MessagesContext } from '@/context/MessagesContext';
-import { UserDetailContext } from '@/context/UserDetailContext';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useConvex } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import AppSideBar from '@/components/custom/AppSideBar';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { ActionContext } from '@/context/ActionContext';
-import { useRouter } from 'next/navigation';
-import { SignInDialogContext } from '@/context/SignInDialogContext';
+"use client";
+import React, { useEffect, useState } from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import Header from "@/components/custom/Header";
+import { MessagesContext } from "@/context/MessagesContext";
+import { UserDetailContext } from "@/context/UserDetailContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useConvex } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AppSideBar from "@/components/custom/AppSideBar";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { ActionContext } from "@/context/ActionContext";
+import { useRouter } from "next/navigation";
+import { SignInDialogContext } from "@/context/SignInDialogContext";
 
 function Provider({ children }) {
   const [messages, setMessages] = useState();
   const [userDetail, setUserDetail] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
   const [action, setAction] = useState();
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
@@ -28,16 +29,16 @@ function Provider({ children }) {
 
   const IsAuthenticated = async () => {
     if (typeof window !== undefined) {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if(!user) {
-        router.push('/')
-        return
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        router.push("/");
+        return;
       }
-      // Fetch user from the database
       const result = await convex.query(api.users.GetUser, {
         email: user?.email,
       });
       setUserDetail(result);
+      setLoadingUser(false);
     }
   };
 
@@ -50,26 +51,28 @@ function Provider({ children }) {
           options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_Id }}
         >
           <SignInDialogContext.Provider value={{ openDialog, setOpenDialog }}>
-          <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>
-            <MessagesContext.Provider value={{ messages, setMessages }}>
-              <ActionContext.Provider value={{action, setAction}}>
-                <NextThemesProvider
-                  attribute="class"
-                  defaultTheme="dark"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  <SidebarProvider defaultOpen={false}>
-                    <AppSideBar />
-                    <main className="w-full">
-                      <Header />
-                      {children}
-                    </main>
-                  </SidebarProvider>
-                </NextThemesProvider>
-              </ActionContext.Provider>
-            </MessagesContext.Provider>
-          </UserDetailContext.Provider>
+            <UserDetailContext.Provider
+              value={{ userDetail, setUserDetail, loadingUser }}
+            >
+              <MessagesContext.Provider value={{ messages, setMessages }}>
+                <ActionContext.Provider value={{ action, setAction }}>
+                  <NextThemesProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                  >
+                    <SidebarProvider defaultOpen={false}>
+                      <AppSideBar />
+                      <main className="w-full">
+                        <Header />
+                        {children}
+                      </main>
+                    </SidebarProvider>
+                  </NextThemesProvider>
+                </ActionContext.Provider>
+              </MessagesContext.Provider>
+            </UserDetailContext.Provider>
           </SignInDialogContext.Provider>
         </PayPalScriptProvider>
       </GoogleOAuthProvider>
