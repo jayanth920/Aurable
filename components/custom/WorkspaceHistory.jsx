@@ -13,7 +13,11 @@ function WorkspaceHistory() {
   const { toggleSidebar } = useSidebar();
 
   useEffect(() => {
-    userDetail && GetAllWorkspace();
+    if (userDetail) {
+      GetAllWorkspace();
+    } else {
+      setWorkSpaceList(undefined);
+    }
   }, [userDetail]);
 
   const GetAllWorkspace = async () => {
@@ -24,6 +28,9 @@ function WorkspaceHistory() {
     setWorkSpaceList(result);
   };
 
+if (!userDetail || !userDetail._id) return null;
+
+    
   return (
     <div>
       <h2 className="font-medium text-lg ml-3">Your Chats</h2>

@@ -43,7 +43,7 @@ function Hero() {
       user: userDetail._id,
       messages: [msg],
     });
-    console.log(workspaceId);
+    // console.log(workspaceId);
     router.push("/workspace/" + workspaceId);
   };
 

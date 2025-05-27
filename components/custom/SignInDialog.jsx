@@ -53,7 +53,7 @@ function SignInDialog() {
         localStorage.setItem("user", JSON.stringify(fullUser));
         setUserDetail(fullUser);
 
-        console.log(fullUser);
+        // console.log(fullUser);
   
         // Close the sign-in dialog
         setOpenDialog(false);
@@ -63,7 +63,7 @@ function SignInDialog() {
     },
 onError: (errorResponse) => {
   // console.error("OAuth error occurred.");
-  console.dir(errorResponse, { depth: null });
+  // console.dir(errorResponse, { depth: null });
   alert("Google sign-in failed. Please try again.");
 }  });
 

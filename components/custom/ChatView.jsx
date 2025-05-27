@@ -19,7 +19,7 @@ import { Loader } from "../ui/loader";
 
 export const countToken = (inputText) => {
   const tokens = encode(inputText || "");
-  console.log(tokens, tokens.length);
+  // console.log(tokens, tokens.length);
   return tokens.length;
 };
 
@@ -63,17 +63,17 @@ function ChatView() {
     setLoading(true);
     const inputTokenCount = countToken(userInputRef.current || "");
 
-    console.log("INPUT TOKENS USED", inputTokenCount);
+    // console.log("INPUT TOKENS USED", inputTokenCount);
 
     const PROMPT = JSON.stringify(messages) + Prompt.CHAT_PROMPT;
 
-    console.log({ PROMPT });
+    // console.log({ PROMPT });
 
     const result = await axios.post("/api/ai-chat", {
       prompt: PROMPT,
     });
 
-    console.log("AI RESPONSE", result.data.result);
+    // console.log("AI RESPONSE", result.data.result);
 
     const aiResp = {
       role: "ai",
@@ -81,10 +81,10 @@ function ChatView() {
     };
 
     const outputTokenCount = countToken(result.data.result);
-    console.log("OUTPUT TOKENS USED", outputTokenCount);
+    // console.log("OUTPUT TOKENS USED", outputTokenCount);
 
     const totalTokenUsed = inputTokenCount + outputTokenCount;
-    console.log("TOTAL TOKENS USED IN GENERAL RESPONSE", totalTokenUsed);
+    // console.log("TOTAL TOKENS USED IN GENERAL RESPONSE", totalTokenUsed);
 
     setMessages((prev) => [...prev, aiResp]);
 
@@ -163,16 +163,17 @@ function ChatView() {
 
       {/* Input Section */}
       <div className="flex gap-2 items-end ">
-        {userDetail && (
+        {userDetail?.picture ? (
           <Image
             onClick={toggleSidebar}
-            src={userDetail?.picture}
+            src={userDetail.picture}
             alt="userImage"
             width={50}
             height={50}
-            className="rounded-full cursor-pointer"
+            className="rounded-full cursor-pointer object-cover"
           />
-        )}
+        ) : null}
+
         <div
           className="p-5 border rounded-xl max-w-2xl w-full mt-3"
           style={{

@@ -10,7 +10,6 @@ const { userDetail, loadingUser } = useContext(UserDetailContext);
 if (loadingUser) {
   return <div className="mt-24 text-white text-center">Loading...</div>;
 }
-
   return (
     <div className="mt-24 px-4 sm:px-10 md:px-20 lg:px-32 max-w-7xl mx-auto">
       <h2 className="text-4xl md:text-5xl font-extrabold text-center">Our Pricing</h2>
@@ -18,7 +17,7 @@ if (loadingUser) {
         {Lookup.PRICING_DESC}
       </p>
 
-      {!!userDetail?.token && (
+      {userDetail && (
         <div className="mt-10 p-6 border border-gray-200 rounded-xl flex flex-col md:flex-row justify-between items-center bg-white shadow-sm">
           <h2 className="text-lg font-medium text-gray-700">
             <span className="text-indigo-600 font-semibold text-xl">{userDetail.token}</span> Tokens Left

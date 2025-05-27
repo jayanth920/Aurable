@@ -27,20 +27,29 @@ function Provider({ children }) {
     IsAuthenticated();
   }, []);
 
-  const IsAuthenticated = async () => {
-    if (typeof window !== undefined) {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        router.push("/");
-        return;
-      }
-      const result = await convex.query(api.users.GetUser, {
-        email: user?.email,
-      });
-      setUserDetail(result);
+const IsAuthenticated = async () => {
+  try {
+    if (typeof window === "undefined") return;
+
+    const userStr = localStorage.getItem("user");
+    if (!userStr) {
       setLoadingUser(false);
+      router.push("/");
+      return;
     }
-  };
+
+    const user = JSON.parse(userStr);
+    const result = await convex.query(api.users.GetUser, {
+      email: user?.email,
+    });
+
+    setUserDetail(result);
+  } catch (err) {
+    console.error("Auth check failed:", err);
+  } finally {
+    setLoadingUser(false);
+  }
+};
 
   return (
     <div>

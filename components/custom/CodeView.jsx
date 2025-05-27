@@ -85,7 +85,7 @@ function CodeViewInner({ initialFiles, onFilesUpdate }) {
 
       const aiResp = result.data;
 
-      console.log(aiResp);
+      // console.log(aiResp);
 
       const mergedFiles = { ...Lookup.DEFAULT_FILE, ...aiResp?.files };
 

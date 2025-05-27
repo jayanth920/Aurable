@@ -1,15 +1,16 @@
-'use client';
-import { HelpCircle, LogOut, Settings, Wallet } from 'lucide-react';
-import React, { useContext } from 'react';
-import { Button } from '../ui/button';
-import { useRouter } from 'next/navigation';
-import { UserDetailContext } from '@/context/UserDetailContext';
-
+"use client";
+import { HelpCircle, LogOut, Settings, Wallet } from "lucide-react";
+import React, { useContext } from "react";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { UserDetailContext } from "@/context/UserDetailContext";
+import { useSidebar } from "../ui/sidebar";
 function SideBarFooter() {
   const router = useRouter();
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const { toggleSidebar } = useSidebar();
 
-  const isUserLoggedIn = userDetail && Object.keys(userDetail).length > 0;
+  const isUserLoggedIn = !!userDetail;
 
   const options = [
     // ...(isUserLoggedIn
@@ -28,9 +29,9 @@ function SideBarFooter() {
     ...(isUserLoggedIn
       ? [
           {
-            name: 'My Subscription',
+            name: "My Subscription",
             icon: Wallet,
-            path: '/pricing',
+            path: "/pricing",
           },
         ]
       : []),
@@ -38,7 +39,7 @@ function SideBarFooter() {
     ...(isUserLoggedIn
       ? [
           {
-            name: 'Sign Out',
+            name: "Sign Out",
             icon: LogOut,
           },
         ]
@@ -47,15 +48,18 @@ function SideBarFooter() {
 
   const onOptionClick = (option) => {
     if (option.path) {
+      toggleSidebar();
       router.push(option.path);
-    } else if (option.name === 'Sign Out') {
-      console.log(`${option.name}: Sign Out`);
-      localStorage.removeItem('user');
-      setUserDetail({});
-      router.push('/');
-      window.location.reload();
+      // window.location.reload();
+    } else if (option.name === "Sign Out") {
+      // console.log(`${option.name}: Sign Out`);
+      localStorage.removeItem("user");
+      setUserDetail(null);
+      toggleSidebar();
+      router.push("/");
+      // window.location.reload();
     } else {
-      console.log(`${option.name} clicked (no path)`);
+      // console.log(`${option.name} clicked (no path)`);
     }
   };
 

@@ -91,16 +91,16 @@ function Header() {
               </Button>
             </>
           )} */}
-          {userDetail && (
+          {userDetail?.picture ? (
             <Image
               onClick={toggleSidebar}
-              src={userDetail?.picture}
+              src={userDetail.picture}
               alt="userImage"
               width={40}
               height={40}
               className="rounded-full cursor-pointer object-cover"
             />
-          )}
+          ) : null}
         </div>
       )}
     </div>

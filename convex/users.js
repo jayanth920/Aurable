@@ -17,7 +17,7 @@ export const CreateUser = mutation({
 
     if (existingUser.length > 0) {
       // 2. Return existing user's _id
-      console.log("EXISTING USER", existingUser[0]._id);
+      // console.log("EXISTING USER", existingUser[0]._id);
       return existingUser[0]._id;
     }
 
