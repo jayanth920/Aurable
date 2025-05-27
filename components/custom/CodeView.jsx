@@ -144,14 +144,14 @@ function CodeViewInner({ initialFiles, onFilesUpdate }) {
             <SandpackCodeEditor style={{ height: "80vh" }} />
           </>
         ) : (
-          <SandpackPreviewClient  />
+          <SandpackPreviewClient />
         )}
       </SandpackLayout>
 
       {loading && (
-        <div className="h-full flex justify-center items-center">
-          <Loader variant="circular" />
-          <h2>Generating your files...</h2>
+        <div className="absolute inset-0 z-50 bg-black bg-opacity-70 flex flex-col justify-center items-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+          <h2 className="text-white text-lg">Generating your files...</h2>
         </div>
       )}
     </div>
@@ -182,7 +182,11 @@ export default function CodeViewWrapper() {
   };
 
   if (!files) {
-    return <div className="p-10 text-white"><Loader variant="circular" /></div>;
+    return (
+      <div className="p-10 text-white">
+        <Loader variant="circular" />
+      </div>
+    );
   }
 
   return (
@@ -194,7 +198,10 @@ export default function CodeViewWrapper() {
           ...Lookup.DEPENDANCY,
         },
       }}
-      options={{ externalResources: ["https://cdn.tailwindcss.com"],autoReload:true }}
+      options={{
+        externalResources: ["https://cdn.tailwindcss.com"],
+        autoReload: true,
+      }}
       files={files}
     >
       <CodeViewInner initialFiles={files} onFilesUpdate={handleFilesUpdate} />

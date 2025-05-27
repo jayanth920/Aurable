@@ -94,12 +94,22 @@ function ChatView() {
     });
 
     const updatedToken = Number(userDetail?.token) - totalTokenUsed;
-    setUserDetail((prev) => ({ ...prev, token: updatedToken }));
 
-    await UpdateToken({
-      token: updatedToken,
-      userId: userDetail?._id,
-    });
+    try {
+      await UpdateToken({
+        token: updatedToken,
+        userId: userDetail?._id,
+      });
+      setUserDetail((prev) => ({ ...prev, token: updatedToken }));
+    } catch (err) {
+      console.error("Failed to update tokens in DB", err);
+      toast.error("Failed to update tokens, try again later");
+      // Optional: rollback
+      setUserDetail((prev) => ({
+        ...prev,
+        token: prev.token + totalTokenUsed,
+      }));
+    }
 
     setLoading(false);
   };

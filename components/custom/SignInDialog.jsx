@@ -18,54 +18,51 @@ import { api } from "@/convex/_generated/api";
 import uuid4 from "uuid4";
 import { SignInDialogContext } from "@/context/SignInDialogContext";
 import { ButtonCta } from "../ui/button-shiny";
+import { useConvex } from "convex/react";
 
 function SignInDialog() {
   const {openDialog, setOpenDialog} = useContext(SignInDialogContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const convex = useConvex();
   const CreateUser = useMutation(api.users.CreateUser);
+  
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        // Get Google user info
-        const userInfo = await axios.get(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          { headers: { Authorization: "Bearer " + tokenResponse?.access_token } }
-        );
-  
-        const googleUser = userInfo.data;
-  
-        // Create user in Convex and get inserted _id
-        const convexUserId = await CreateUser({
-          name: googleUser?.name,
-          email: googleUser?.email,
-          picture: googleUser?.picture,
-          uid: uuid4(), // optional if you're also using `email` for uniqueness
-        });
-  
-        // Merge Google user data with Convex _id
-        const fullUser = {
-          ...googleUser,
-          _id: convexUserId,
-        };
-  
-        // Save to localStorage and context
-        localStorage.setItem("user", JSON.stringify(fullUser));
-        setUserDetail(fullUser);
+const googleLogin = useGoogleLogin({
+  onSuccess: async (tokenResponse) => {
+    try {
+      const userInfo = await axios.get(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        { headers: { Authorization: "Bearer " + tokenResponse?.access_token } }
+      );
 
-        // console.log(fullUser);
-  
-        // Close the sign-in dialog
-        setOpenDialog(false);
-      } catch (err) {
-        console.error("Google login error:", err);
-      }
-    },
-onError: (errorResponse) => {
-  // console.error("OAuth error occurred.");
-  // console.dir(errorResponse, { depth: null });
-  alert("Google sign-in failed. Please try again.");
-}  });
+      const googleUser = userInfo.data;
+
+      // tep 1: Create or upsert user in DB
+      await CreateUser({
+        name: googleUser?.name,
+        email: googleUser?.email,
+        picture: googleUser?.picture,
+        uid: uuid4(),
+      });
+
+      // Step 2: Fetch full, fresh user with `.token` from DB
+      const result = await convex.query(api.users.GetUser, {
+        email: googleUser?.email,
+      });
+
+      // Step 3: Store only server-trusted user in localStorage + context
+      localStorage.setItem("user", JSON.stringify(result));
+      setUserDetail(result);
+
+      setOpenDialog(false);
+    } catch (err) {
+      console.error("Google login error:", err);
+    }
+  },
+  onError: () => {
+    alert("Google sign-in failed. Please try again.");
+  },
+});
 
   
   return (

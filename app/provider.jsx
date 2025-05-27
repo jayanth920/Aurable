@@ -20,6 +20,8 @@ function Provider({ children }) {
   const [loadingUser, setLoadingUser] = useState(true);
   const [action, setAction] = useState();
   const [openDialog, setOpenDialog] = useState(false);
+  const [hasFetchedUser, setHasFetchedUser] = useState(false);
+
   const router = useRouter();
   const convex = useConvex();
 
@@ -30,10 +32,12 @@ function Provider({ children }) {
 const IsAuthenticated = async () => {
   try {
     if (typeof window === "undefined") return;
+    console.log("IsAuthenticated");
 
     const userStr = localStorage.getItem("user");
     if (!userStr) {
       setLoadingUser(false);
+      setHasFetchedUser(true);
       router.push("/");
       return;
     }
@@ -44,12 +48,15 @@ const IsAuthenticated = async () => {
     });
 
     setUserDetail(result);
+    localStorage.setItem("user", JSON.stringify(result));
   } catch (err) {
     console.error("Auth check failed:", err);
   } finally {
     setLoadingUser(false);
+    setHasFetchedUser(true);
   }
 };
+
 
   return (
     <div>
@@ -61,7 +68,7 @@ const IsAuthenticated = async () => {
         >
           <SignInDialogContext.Provider value={{ openDialog, setOpenDialog }}>
             <UserDetailContext.Provider
-              value={{ userDetail, setUserDetail, loadingUser }}
+              value={{ userDetail, setUserDetail, loadingUser, hasFetchedUser }}
             >
               <MessagesContext.Provider value={{ messages, setMessages }}>
                 <ActionContext.Provider value={{ action, setAction }}>
