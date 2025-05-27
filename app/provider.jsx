@@ -59,8 +59,6 @@ function Provider({ children }) {
                   <NextThemesProvider
                     attribute="class"
                     defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
                   >
                     <SidebarProvider defaultOpen={false}>
                       <AppSideBar />
