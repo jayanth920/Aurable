@@ -10,7 +10,7 @@
 
 Welcome to **Aurable**! 🚀
 
-**Aurable** is a **micro SaaS** application designed to make webapps suing only prompts, powered by Gemini AI. It's a **no-code** platform that allows you to create, edit, and deploy your apps with just a few clicks.
+**Aurable** is a **micro SaaS** application designed to make web apps using prompts, powered by Gemini AI. It's a **no-code** platform that allows you to create, edit, and deploy your apps with just a few clicks.
 
 
 ## 💖 Support & Donations
