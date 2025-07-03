@@ -15,12 +15,13 @@ import { TextShimmerWave } from "../ui/text-shimmer-wave";
 import { GradientButton } from "../ui/gradient-button";
 import { cn } from "@/lib/utils";
 import { SignInDialogContext } from "@/context/SignInDialogContext";
+import Image from "next/image";
 
 function Hero() {
   const [userInput, setUserInput] = useState();
   const { messages, setMessages } = useContext(MessagesContext);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
-  const {openDialog, setOpenDialog} = useContext(SignInDialogContext);
+  const { openDialog, setOpenDialog } = useContext(SignInDialogContext);
   const CreateWorkspace = useMutation(api.workspace.CreateWorkspace);
   const router = useRouter();
 
@@ -127,8 +128,20 @@ function Hero() {
             {suggestion}
           </h2>
         ))}
+        <a
+          href="https://www.producthunt.com/products/aurable?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-aurable"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=987852&theme=light&t=1751579283735"
+            alt="Aurable - Build web apps at minimal cost | Product Hunt"
+            width={250}
+            height={54}
+          />
+        </a>{" "}
       </div>
-      <SignInDialog/>
+      <SignInDialog />
     </div>
   );
 }
